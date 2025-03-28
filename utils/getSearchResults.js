@@ -10,44 +10,32 @@ import {
 } from "./selectors.js";
 
 async function getSearchResults(query, category) {
-  try {
-    const [
-      tonatonResult,
-      jijiResults,
-      jumiaResults,
-      compughanaResults,
-      kikuuResults,
-      bayghResults,
-      shopbeautyboothResults,
-    ] = await Promise.all([
-      scrapeWebsite("tonaton", query, category, tonatonSelectors),
-      scrapeWebsite("jiji", query, category, jijiSelectors),
-      scrapeWebsite("jumia", query, category, jumiaSelectors),
-      scrapeWebsite("compughana", query, category, compuGhanaSelectors),
-      scrapeWebsite("kikuu", query, category, kikuuSelectors),
-      scrapeWebsite("baygh", query, category, bayghSelectors),
-      scrapeWebsite(
-        "shopbeautybooth",
-        query,
-        category,
-        shopBeautyBoothSelectors
-      ),
-    ]);
+  const scrapers = [
+    { name: "tonaton", selectors: tonatonSelectors },
+    { name: "jiji", selectors: jijiSelectors },
+    { name: "jumia", selectors: jumiaSelectors },
+    { name: "compughana", selectors: compuGhanaSelectors },
+    { name: "kikuu", selectors: kikuuSelectors },
+    { name: "baygh", selectors: bayghSelectors },
+    { name: "shopbeautybooth", selectors: shopBeautyBoothSelectors },
+  ];
 
-    const combinedResults = [
-      ...tonatonResult,
-      ...jijiResults,
-      ...jumiaResults,
-      ...compughanaResults,
-      ...kikuuResults,
-      ...bayghResults,
-      ...shopbeautyboothResults,
-    ].sort((a, b) => a.price - b.price);
+  let combinedResults = [];
 
-    return combinedResults;
-  } catch (error) {
-    console.log(error);
+  for (const { name, selectors } of scrapers) {
+    try {
+      const result = await scrapeWebsite(name, query, category, selectors);
+      if (Array.isArray(result) && result.length > 0) {
+        combinedResults.push(...result);
+      } else {
+        continue;
+      }
+    } catch (error) {
+      console.error(`Error scraping ${name}:`, error);
+    }
   }
+
+  return combinedResults.sort((a, b) => a.price - b.price);
 }
 
 export default getSearchResults;
