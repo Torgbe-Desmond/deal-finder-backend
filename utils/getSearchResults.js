@@ -21,11 +21,13 @@ async function getSearchResults(query, category) {
   ];
 
   let combinedResults = [];
-
-  for (let i = 0; i < scrapers.length; i += 2){
-    const batch = scrapers.slice(i, i + 2).map(({ name, selectors }) =>
-      scrapeWebsite(name, query, category, selectors).catch(() => [])
-    );
+  // scrapping two websites at a time
+  for (let i = 0; i < scrapers.length; i += 2) {
+    const batch = scrapers
+      .slice(i, i + 2)
+      .map(({ name, selectors }) =>
+        scrapeWebsite(name, query, category, selectors).catch(() => [])
+      );
     const results = await Promise.all(batch);
     combinedResults.push(...results.flat());
   }
