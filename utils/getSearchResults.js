@@ -22,9 +22,9 @@ async function getSearchResults(query, category) {
 
   let combinedResults = [];
   // scrapping two websites at a time
-  for (let i = 0; i < scrapers.length; i += 2) {
+  for (let i = 0; i < scrapers.length; i += 3) {
     const batch = scrapers
-      .slice(i, i + 2)
+      .slice(i, i + 3)
       .map(({ name, selectors }) =>
         scrapeWebsite(name, query, category, selectors).catch(() => [])
       );
