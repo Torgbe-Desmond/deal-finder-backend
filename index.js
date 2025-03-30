@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:3000/", "https://deal-finder-orcin.vercel.app"],
+    origin: "https://deal-finder-orcin.vercel.app", // Or replace with specific origin: "http://your-frontend.com"
     credentials: true,
     methods: ["POST", "GET"],
     allowedHeaders: ["Content-Type"],
@@ -20,7 +20,7 @@ app.post("/search", async (req, res) => {
   const { category, query } = req.query;
   console.log("query", query.toLocaleLowerCase());
   console.log("category", category.toLocaleLowerCase());
-  const selectedScrapers = req.body.selectedScrapers;
+  const selectedScrapers = req.body.selectedScrapers
   try {
     const response = await getSearchResults(
       query.toLocaleLowerCase(),
