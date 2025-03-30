@@ -1,7 +1,7 @@
-function SuccessResponseObject(data=null,message=null,success=false){
-    this.data = data
-    this.message = message
-    this.success = success
+function SuccessResponseObject(data = [], message = null, success = false) {
+  this.data = data;
+  this.message = message;
+  this.success = success;
 }
 
-export default SuccessResponseObject
+export default SuccessResponseObject;

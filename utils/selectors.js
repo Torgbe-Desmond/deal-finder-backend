@@ -61,13 +61,13 @@ export const jijiSelectors = new CreateSelectorsObject(
 );
 
 export const jumiaSelectors = new CreateSelectorsObject(
-  ".prd",
-  ".img-c img",
-  ".prc",
-  null, // No location selector provided
-  "h3",
+  "article.prd", // Product container
+  "img.img", // Image selector
+  "div.prc", // Price selector
+  "div.seller-location", // Location selector (if available, otherwise null)
+  "h3.name", // Product name/description selector
   null, // No status selector provided
-  "a"
+  "a.core" // Product link selector
 );
 
 export const tonatonSelectors = new CreateSelectorsObject(
