@@ -21,7 +21,6 @@ async function getSearchResults(query, category, selectedScrapers) {
     { name: "jumia", selectors: jumiaSelectors },
     { name: "compughana", selectors: compuGhanaSelectors },
     { name: "kikuu", selectors: kikuuSelectors },
-    { name: "baygh", selectors: bayghSelectors },
     { name: "shopbeautybooth", selectors: shopBeautyBoothSelectors },
   ];
 

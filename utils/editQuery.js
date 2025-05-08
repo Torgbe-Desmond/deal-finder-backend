@@ -163,7 +163,6 @@ function formatSearchUrl(site, query, category) {
     jiji: "https://jiji.com.gh/",
     compughana: "https://compughana.com/",
     melcom: "https://melcom.com/",
-    baygh: "https://www.baygh.com/",
     shopbeautybooth: "https://shopbeautybooth.com/",
   };
 
@@ -193,10 +192,6 @@ function formatSearchUrl(site, query, category) {
       "+"
     )}`,
     melcom: `${siteCategory}results/?q=${encodeURIComponent(query).replace(
-      /%20/g,
-      "+"
-    )}`,
-    baygh: `${siteCategory}?q=${encodeURIComponent(query).replace(
       /%20/g,
       "+"
     )}`,

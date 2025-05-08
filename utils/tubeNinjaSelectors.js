@@ -1,10 +1,10 @@
-function CreateRecursiveSelectorsObject(
+function TubeNinjaSelectors({
   inputField,
   submitButton,
   titleSection,
   downloadLinksSection,
-  ageLimitButton
-) {
+  ageLimitButton,
+}) {
   (this.inputField = inputField),
     (this.submitButton = submitButton),
     (this.titleSection = titleSection),
@@ -12,5 +12,4 @@ function CreateRecursiveSelectorsObject(
     (this.ageLimitButton = ageLimitButton);
 }
 
-export default CreateRecursiveSelectorsObject;
-
+export default TubeNinjaSelectors;

@@ -26,7 +26,6 @@ async function scrapeWebsite(site, query, category, selectors) {
       jiji: "https://jiji.com.gh",
       compughana: "https://compughana.com",
       melcom: "https://melcom.com",
-      baygh: "https://www.baygh.com",
       shopbeautybooth: "https://shopbeautybooth.com",
     };
 
@@ -67,36 +66,27 @@ async function scrapeWebsite(site, query, category, selectors) {
       (selectors, site, listOfDynamicSiteLinks) => {
         try {
           const results = [];
-          document.querySelectorAll(selectors.container).forEach((item) => {
+          document.querySelectorAll(selectors.product__container).forEach((item) => {
             const product__description =
-              item.querySelector(selectors.description)?.innerText.trim() ||
+              item.querySelector(selectors.product__description)?.innerText.trim() ||
               "No title";
 
             const product__image =
-              item.querySelector(selectors.image)?.getAttribute("data-src") ||
-              item.querySelector(selectors.image)?.getAttribute("src") ||
+              item.querySelector(selectors.product__image)?.getAttribute("data-src") ||
+              item.querySelector(selectors.product__image)?.getAttribute("src") ||
               "#";
 
             const product__price =
-              item.querySelector(selectors.price)?.innerText.trim() ||
+              item.querySelector(selectors.product__price)?.innerText.trim() ||
               "No price";
 
             const product__location =
-              item.querySelector(selectors.location)?.innerText.trim() ||
+              item.querySelector(selectors.product__location)?.innerText.trim() ||
               "No location";
 
             const product__status =
-              item.querySelector(selectors.status)?.innerText.trim() ||
+              item.querySelector(selectors.product__status)?.innerText.trim() ||
               "No status";
-
-            const siteLink = listOfDynamicSiteLinks[site]
-              ? `${listOfDynamicSiteLinks[site]}${
-                  item.querySelector(selectors.link)?.getAttribute("href") || ""
-                }`
-              : item.querySelector(selectors.link)?.getAttribute("href") ||
-                "No link";
-
-            console.log("siteLink", siteLink);
 
             if (product__description !== "No title") {
               results.push({
@@ -105,7 +95,6 @@ async function scrapeWebsite(site, query, category, selectors) {
                 product__location,
                 product__description,
                 product__status,
-                siteLink,
                 domain: site,
               });
             }
@@ -126,8 +115,6 @@ async function scrapeWebsite(site, query, category, selectors) {
     if (!products || products.length === 0) {
       console.warn(`No products found for ${site}`);
     }
-
-    console.log("products", products);
 
     return products;
   } catch (error) {
