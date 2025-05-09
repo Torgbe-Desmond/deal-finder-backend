@@ -101,7 +101,7 @@ async function scrapeWebsite(site, query, category, selectors) {
           });
 
           console.log(`Scraped ${results.length} products from ${site}`);
-          return results.slice(0, 5);
+          return results.slice(0, 20);
         } catch (error) {
           console.error("Error during page evaluation:", error);
           return [];
