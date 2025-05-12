@@ -1,10 +1,10 @@
-const AppError  = require("./custom-error-handler");
-const sendMailToAdminIfCritical = require("../utils/sendMailToAdminIfCritical");
+import sendMailToAdminIfCritical from "../utils/sendMailToAdminIfCritical.js";
+import AppError  from "./custom-error-handler.js";
 
 class ErrorHandler {
   async handleError(err) {
-    // await sendMailToAdminIfCritical(err);
-     console.log(err)
+    await sendMailToAdminIfCritical(err);
+     console.log("err",err)
   }
 
   isTrustedError(error) {
@@ -15,4 +15,4 @@ class ErrorHandler {
   }
 }
 
-module.exports =  ErrorHandler;
+export default ErrorHandler;

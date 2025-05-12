@@ -36,6 +36,7 @@ const categoryMap = {
     baygh: "search",
   },
   "animals & pets": {
+    tonaton: "c_animals-and-pets",
     jumia: "catalog/",
     jiji: "animals-and-pets",
     kikuu: "search/",
@@ -127,7 +128,7 @@ const categoryMap = {
     baygh: "search",
   },
   "agriculture and food": {
-    tonaton: "",
+    tonaton: "c_agriculture-and-foodstuff",
     jumia: "catalog/",
     jiji: "agriculture-and-foodstuff",
     kikuu: "search/",
@@ -155,7 +156,34 @@ const categoryMap = {
   },
 };
 
-function formatSearchUrl(site, query, category) {
+const minMaxMap = {
+  tonaton: {
+    min: "price_min",
+    max: "price_max",
+  },
+  jumia: {
+    min: "price_min",
+    max: "price_max",
+  },
+  jiji: {
+    min: "price_min",
+    max: "price_max",
+  },
+  kikuu: {
+    min: "price_min",
+    max: "price_max",
+  },
+  compughana: {
+    min: "price_min",
+    max: "price_max",
+  },
+  melcom: {
+    min: "price_min",
+    max: "price_max",
+  },
+};
+
+function formatSearchUrl(site, query, category, maxPrice, minPrice) {
   const baseUrls = {
     tonaton: "https://tonaton.com/",
     jumia: "https://www.jumia.com.gh/",
@@ -165,37 +193,29 @@ function formatSearchUrl(site, query, category) {
     melcom: "https://melcom.com/",
     shopbeautybooth: "https://shopbeautybooth.com/",
   };
+  const siteCategory = categoryMap?.[category]?.[site] ?? category;
+  console.log("siteCategory", siteCategory);
 
-  // Get the category mapping for the site, fallback to a general search
-  const siteCategory = categoryMap[category]?.[site] || category;
-
-  // Format query parameters for each site
   const params = {
-    tonaton: `${siteCategory}?query=${encodeURIComponent(query).replace(
+    tonaton: `${siteCategory}?q=${encodeURIComponent(query).replace(
       /%20/g,
       "+"
-    )}`,
+    )}&${minMaxMap[site]?.min}=${minPrice}&${minMaxMap[site]?.max}=${maxPrice}`,
     jumia: `${siteCategory}?q=${encodeURIComponent(query).replace(
       /%20/g,
       "+"
-    )}`,
-    kikuu: `${siteCategory}result?kw=${encodeURIComponent(query).replace(
-      /%20/g,
-      "+"
-    )}`,
-    jiji: `${siteCategory}?query=${encodeURIComponent(query).replace(
-      /%20/g,
-      "+"
-    )}`,
-    compughana: `${siteCategory}results/?q=${encodeURIComponent(query).replace(
-      /%20/g,
-      "+"
-    )}`,
+    )}&price=${minPrice}-${maxPrice}`,
+    compughana: `${siteCategory}?product_list_order=price&q=${encodeURIComponent(
+      query
+    ).replace(/%20/g, "+")}`,
     melcom: `${siteCategory}results/?q=${encodeURIComponent(query).replace(
       /%20/g,
       "+"
     )}`,
-    shopbeautybooth: `?s=${encodeURIComponent(query).replace(/%20/g, "+")}`,
+    shopbeautybooth: `?orderby=price&s=${encodeURIComponent(query).replace(
+      /%20/g,
+      "+"
+    )}`,
   };
 
   return `${baseUrls[site]}${params[site]}`;

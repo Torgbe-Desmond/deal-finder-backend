@@ -1,59 +1,74 @@
 import scrapeWebsite from "../scrappers/scrapeWebsite.js";
-import {
-  bayghSelectors,
-  compuGhanaSelectors,
-  jijiSelectors,
-  jumiaSelectors,
-  kikuuSelectors,
-  tonatonSelectors,
-  shopBeautyBoothSelectors,
-} from "./selectors.js";
+import ErrorHandler from "../Errors/ErrorHandler.js";
+const Handler = new ErrorHandler();
 
-async function getSearchResults(query, category, selectedScrapers) {
-  // Validate inputs
-  if (!query || !category) {
-    throw new Error("Query and category are required.");
-  }
+async function getSearchResults(
+  query,
+  category,
+  selectedScrapers,
+  maxPrice,
+  minPrice,
+  scrapers
+) {
+  try {
+    if (!query || !category) {
+      throw new Error("Query and category are required.");
+    }
 
-  const scrapers = [
-    { name: "tonaton", selectors: tonatonSelectors },
-    { name: "jiji", selectors: jijiSelectors },
-    { name: "jumia", selectors: jumiaSelectors },
-    { name: "compughana", selectors: compuGhanaSelectors },
-    { name: "kikuu", selectors: kikuuSelectors },
-    { name: "shopbeautybooth", selectors: shopBeautyBoothSelectors },
-  ];
+    const allowedScrapers =
+      selectedScrapers.length > 0
+        ? scrapers.filter((scraper) => selectedScrapers.includes(scraper.name))
+        : [...scrapers];
 
-  // Determine which scrapers to use
-  const allowedScrapers =
-    selectedScrapers.length > 0
-      ? scrapers.filter((scraper) => selectedScrapers.includes(scraper.name))
-      : [...scrapers];
+    let combinedResults = [];
+    const BATCH_SIZE = 3;
 
-  let combinedResults = [];
-  const BATCH_SIZE = 3; // You can adjust this value
+    for (let i = 0; i < allowedScrapers.length; i += BATCH_SIZE) {
+      const batch = allowedScrapers
+        .slice(i, i + BATCH_SIZE)
+        .map(
+          async ({
+            name,
+            product__container,
+            product__image,
+            product__price,
+            product__location,
+            product__description,
+            product__status,
+            product__site__link,
+          }) => {
+            console.log("name i ",name)
+            const selectors = {
+              product__container: product__container,
+              product__image: product__image,
+              product__price: product__price,
+              product__location: product__location,
+              product__description: product__description,
+              product__status: product__status,
+              product__site__link: product__site__link,
+            };
+            return scrapeWebsite(
+              name,
+              query,
+              category,
+              selectors,
+              maxPrice,
+              minPrice
+            );
+          }
+        );
 
-  // Scraping in batches
-  for (let i = 0; i < allowedScrapers.length; i += BATCH_SIZE) {
-    const batch = allowedScrapers
-      .slice(i, i + BATCH_SIZE)
-      .map(async ({ name, selectors }) => {
-        console.log("selectors", selectors);
-        return scrapeWebsite(name, query, category, selectors).catch((err) => {
-          console.error(`Error scraping ${name}:`, err);
-          return [];
-        });
-      });
-
-    try {
       const results = await Promise.all(batch);
       combinedResults.push(...results.flat());
       return combinedResults.sort(
         (a, b) => a?.product__price - b?.product__price
       );
-    } catch (error) {
-      console.error("Error processing batch:", error);
     }
+  } catch (error) {
+    if (!Handler.isTrustedError(error)) {
+      Handler.handleError(error);
+    }
+    throw error;
   }
 }
 

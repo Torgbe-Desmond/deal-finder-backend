@@ -6,8 +6,8 @@ class custom_error_handler extends Error {
 
     this.message = message;
 
-    Error.captureStackTrace(this)
+    Error.captureStackTrace(this, this.constructor);
   }
 }
 
-module.exports = custom_error_handler;
+export default custom_error_handler;
