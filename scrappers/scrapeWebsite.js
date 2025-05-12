@@ -14,7 +14,6 @@ async function scrapeWebsite(
   maxPrice,
   minPrice
 ) {
-  console.log(site, query, `${category}`, maxPrice, minPrice);
 
   const browser = await launchBrowser();
   const page = await browser.newPage();

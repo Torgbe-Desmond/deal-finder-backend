@@ -16,8 +16,6 @@ const getProducts = async (req, res, next) => {
 
     scrapers = scrapers.filter((s) => s.name !== "jiji");
 
-    console.log(scrapers)
-
     if (!query || typeof query !== "string") {
       throw new BadRequest(`Please enter a valid search query`, true);
     }

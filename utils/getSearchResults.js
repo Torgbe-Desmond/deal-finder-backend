@@ -1,5 +1,6 @@
 import scrapeWebsite from "../scrappers/scrapeWebsite.js";
 import ErrorHandler from "../Errors/ErrorHandler.js";
+import BadRequest from "../Errors/BadRequest.js";
 const Handler = new ErrorHandler();
 
 async function getSearchResults(
@@ -12,7 +13,7 @@ async function getSearchResults(
 ) {
   try {
     if (!query || !category) {
-      throw new Error("Query and category are required.");
+      throw new BadRequest("Query and category are required.", true);
     }
 
     const allowedScrapers =
@@ -37,7 +38,6 @@ async function getSearchResults(
             product__status,
             product__site__link,
           }) => {
-            console.log("name i ",name)
             const selectors = {
               product__container: product__container,
               product__image: product__image,
